@@ -1,4 +1,4 @@
-
+from colorama import init, Fore, Back, Style
 import random
 import os
 import datetime
@@ -9,6 +9,15 @@ solo_analisado   = {}
 fase_atual       = 0
 saude_micelial   = 100
 
+init(autoreset=True)
+
+TITULO = Fore.CYAN + Style.BRIGHT
+SUCESSO = Fore.GREEN + Style.BRIGHT
+ALERTA = Fore.YELLOW + Style.BRIGHT
+ERRO = Fore.RED + Style.BRIGHT
+INFO = Fore.BLUE
+DESTAQUE = Fore.MAGENTA + Style.BRIGHT
+
 def limpar_tela():
         print("\n" * 100)
 
@@ -17,12 +26,28 @@ def pausar():
 
 def cabecalho(titulo):
     limpar_tela()
-    print("=" * 45)
-    print(f"  MycoSentinel — {titulo}")
-    print("=" * 45)
-    print(f"  Ambiente: {ambiente_atual or 'Não selecionado'}")
-    print(f"  Fase: {fase_atual or '---'}  |  Saúde: {saude_micelial}%")
-    print("=" * 45)
+
+    print(TITULO + "=" * 55)
+    print(TITULO + f"  MycoSentinel — {titulo}")
+    print(TITULO + "=" * 55)
+
+    print(INFO + f"  Ambiente: {ambiente_atual or 'Não selecionado'}")
+
+    if fase_atual == 0:
+        print(INFO + "  Fase: Não iniciada")
+    else:
+        print(INFO + f"  Fase: {fase_atual}")
+
+    if saude_micelial >= 70:
+        cor_saude = SUCESSO
+    elif saude_micelial >= 40:
+        cor_saude = ALERTA
+    else:
+        cor_saude = ERRO
+
+    print(cor_saude + f"  Saúde: {saude_micelial}%")
+
+    print(TITULO + "=" * 55)
     print()
 
 def ler_opcao(maximo):
@@ -90,7 +115,14 @@ def analisar_solo():
         "temperatura": round(random.uniform(-60, 40), 1)
     }
 
-    print(f"  {'Parâmetro':<14} {'Valor':<10} {'Status'}")
+    if status == "CRÍTICO":
+        cor = ERRO
+    elif status == "ATENÇÃO":
+        cor = ALERTA
+    else:
+        cor = SUCESSO
+
+    print(f"  {parametro:<14} {str(valor):<10} {cor}{status}")
     print("  " + "-" * 38)
 
     for parametro, valor in solo_analisado.items():
@@ -284,15 +316,15 @@ def simular_regeneracao():
         evento = random.randint(1, 10)
 
         if evento <= 2:
-            print(f"  Ciclo {ciclo}: ALERTA — Contaminação detectada!")
+            print(ERRO + f"  Ciclo {ciclo}: ALERTA — Contaminação detectada!")        
             saude_micelial -= 10
             registrar_log(f"ALERTA | Fase {proxima} | Ciclo {ciclo} | Contaminação detectada.")
         elif evento <= 4:
-            print(f"  Ciclo {ciclo}: ATENÇÃO — Variação de temperatura.")
+            print(ALERTA + f"  Ciclo {ciclo}: ATENÇÃO — Variação de temperatura.")            
             saude_micelial -= 5
             registrar_log(f"ATENÇÃO | Fase {proxima} | Ciclo {ciclo} | Variação de temperatura.")
         else:
-            print(f"  Ciclo {ciclo}: OK — Rede micelial estável.")
+            print(SUCESSO + f"  Ciclo {ciclo}: OK — Rede micelial estável.")
             registrar_log(f"INFO | Fase {proxima} | Ciclo {ciclo} | Estável.")
 
         if saude_micelial <= 0:
@@ -328,13 +360,13 @@ def monitor_bioeletrico():
 
     for i, sinal in enumerate(sinais):
         if sinal < 1.0:
-            status = "CRÍTICO — Possível morte micelial"
+            status = ERRO + "CRÍTICO — Possível morte micelial"
         elif sinal < 2.0:
-            status = "ATENÇÃO — Atividade baixa"
+            status = ALERTA + "ATENÇÃO — Atividade baixa"
         elif sinal > 4.5:
-            status = "ALERTA  — Crescimento acelerado"
+            status = DESTAQUE + "ALERTA — Crescimento acelerado"
         else:
-            status = "NORMAL"
+            status = SUCESSO + "NORMAL"
 
         print(f"  Leitura {i+1:02d}: {sinal}  →  {status}")
 
@@ -470,33 +502,39 @@ def gerar_relatorio():
 
 def menu():
     while True:
-        cabecalho("Menu Principal")
-        print("  1. Selecionar ambiente")
-        print("     Escolha entre Terra, Lua ou Marte.")
+        print(SUCESSO + "  1. Selecionar ambiente")
+        print(INFO + "     Escolha entre Terra, Lua ou Marte.")
         print()
-        print("  2. Analisar solo")
-        print("     Lê sensores e classifica cada parâmetro.")
+
+        print(SUCESSO + "  2. Analisar solo")
+        print(INFO + "     Lê sensores e classifica cada parâmetro.")
         print()
-        print("  3. Recomendar fungos")
-        print("     A IA sugere espécies com base no solo.")
+
+        print(SUCESSO + "  3. Recomendar fungos")
+        print(INFO + "     A IA sugere espécies com base no solo.")
         print()
-        print("  4. Simular regeneração")
-        print("     Executa as 4 fases com eventos aleatórios.")
+
+        print(SUCESSO + "  4. Simular regeneração")
+        print(INFO + "     Executa as 4 fases com eventos aleatórios.")
         print()
-        print("  5. Monitor bioelétrico")
-        print("     Analisa sinais da rede micelial.")
+
+        print(SUCESSO + "  5. Monitor bioelétrico")
+        print(INFO + "     Analisa sinais da rede micelial.")
         print()
-        print("  6. Consultar log")
-        print("     Exibe o histórico de eventos da missão.")
+
+        print(SUCESSO + "  6. Consultar log")
+        print(INFO + "     Exibe o histórico de eventos da missão.")
         print()
-        print("  7. Banco de fungos")
-        print("     Lista e cadastra espécies fúngicas.")
+
+        print(SUCESSO + "  7. Banco de fungos")
+        print(INFO + "     Lista e cadastra espécies fúngicas.")
         print()
-        print("  8. Gerar relatório")
-        print("     Salva um resumo completo da missão.")
+
+        print(SUCESSO + "  8. Gerar relatório")
+        print(INFO + "     Salva um resumo completo da missão.")
         print()
-        print("  0. Sair")
-        print()
+
+        print(ERRO + "  0. Sair")   
 
         op = ler_opcao(8)
 

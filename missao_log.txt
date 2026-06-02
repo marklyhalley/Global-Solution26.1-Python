@@ -33,3 +33,7 @@
 [01/06/2026 17:05] INFO | Fase 1 | Ciclo 5 | Estável.
 [01/06/2026 17:05] Fase 1 concluída. Saúde: 80%
 [01/06/2026 17:05] Fungos recomendados para Terra: Rhizopus stolonifer
+[02/06/2026 19:23] Ambiente selecionado: Terra
+[02/06/2026 19:23] Solo analisado: {'pH': 6.6, 'umidade': 55.2, 'nitrogenio': 50.8, 'toxicidade': 3.04, 'temperatura': 25.5}
+[02/06/2026 19:24] Relatório gerado: relatorio_02062026_1924.txt
+[02/06/2026 20:04] Ambiente selecionado: Terra
