@@ -1,29 +1,46 @@
+# MycoSentinel — Sistema de monitoramento e simulação de redes miceliais
+# para ambientes extremos (Terra, Lua e Marte). Coordena análise de solo,
+# recomendação de fungos, simulação de regeneração e geração de relatórios.
+
 from colorama import init, Fore, Back, Style
 import random
 import os
 import datetime
 import json
 
-ambiente_atual   = None
-solo_analisado   = {}
-fase_atual       = 0
-saude_micelial   = 100
+# ── Estado global da missão ──────────────────────────────────────────────────
+# Estas variáveis representam o contexto persistente da sessão.
+# São modificadas ao longo da execução e consultadas por múltiplas funções.
 
-init(autoreset=True)
+ambiente_atual   = None   # Planeta/ambiente ativo; None indica que nenhum foi selecionado
+solo_analisado   = {}     # Últimos parâmetros coletados pelos sensores de solo
+fase_atual       = 0      # Progresso da simulação: 0 = não iniciada; 1–4 = fases concluídas
+saude_micelial   = 100    # Índice de saúde da rede micelial; decresce com eventos adversos
 
-TITULO = Fore.CYAN + Style.BRIGHT
-SUCESSO = Fore.GREEN + Style.BRIGHT
-ALERTA = Fore.YELLOW + Style.BRIGHT
-ERRO = Fore.RED + Style.BRIGHT
-INFO = Fore.BLUE
+init(autoreset=True)      # Inicializa o Colorama com reset automático após cada impressão
+
+# ── Paleta semântica de cores ────────────────────────────────────────────────
+# Cada constante agrupa cor + brilho para um nível de mensagem específico,
+# garantindo consistência visual em toda a interface de texto.
+TITULO   = Fore.CYAN    + Style.BRIGHT
+SUCESSO  = Fore.GREEN   + Style.BRIGHT
+ALERTA   = Fore.YELLOW  + Style.BRIGHT
+ERRO     = Fore.RED     + Style.BRIGHT
+INFO     = Fore.BLUE
 DESTAQUE = Fore.MAGENTA + Style.BRIGHT
 
+
+# Simula limpeza de tela imprimindo linhas em branco, compatível com
+# ambientes que não suportam os comandos 'cls' ou 'clear'.
 def limpar_tela():
         print("\n" * 100)
 
 def pausar():
     input("\n  [ ENTER para continuar... ]")
 
+
+# Exibe o cabeçalho padrão de cada tela, consolidando o estado atual da missão
+# (ambiente, fase e saúde micelial) para contextualizar o usuário a cada ação.
 def cabecalho(titulo):
     limpar_tela()
 
@@ -38,6 +55,8 @@ def cabecalho(titulo):
     else:
         print(INFO + f"  Fase: {fase_atual}")
 
+    # A cor do indicador muda conforme o nível de risco:
+    # verde (≥70%), amarelo (40–69%) e vermelho (<40%).
     if saude_micelial >= 70:
         cor_saude = SUCESSO
     elif saude_micelial >= 40:
@@ -50,6 +69,9 @@ def cabecalho(titulo):
     print(TITULO + "=" * 55)
     print()
 
+
+# Lê e valida uma opção numérica do usuário dentro do intervalo [0, maximo].
+# Repete a solicitação até que uma entrada válida seja fornecida.
 def ler_opcao(maximo):
     while True:
         try:
@@ -60,6 +82,9 @@ def ler_opcao(maximo):
         except ValueError:
             print("  [!] Apenas números.")
 
+
+# Persiste eventos relevantes da sessão no arquivo missao_log.txt.
+# Cada entrada é prefixada com data e hora para rastreabilidade da missão.
 def registrar_log(mensagem):
     try:
         agora = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
@@ -70,6 +95,8 @@ def registrar_log(mensagem):
 
 
 
+# Permite ao usuário definir o ambiente planetário da missão.
+# O ambiente influencia diretamente a compatibilidade dos fungos recomendados.
 def selecionar_ambiente():
     global ambiente_atual
     cabecalho("Selecionar Ambiente")
@@ -97,6 +124,9 @@ def selecionar_ambiente():
     registrar_log(f"Ambiente selecionado: {ambiente_atual}")
 
 
+# Simula a coleta de dados dos sensores de solo e classifica cada parâmetro.
+# Os valores são gerados aleatoriamente para reproduzir variações reais de campo.
+# Requer que um ambiente já tenha sido selecionado.
 def analisar_solo():
     global solo_analisado
     cabecalho("Analisar Solo")
@@ -107,6 +137,7 @@ def analisar_solo():
 
     print("  Coletando dados dos sensores...\n")
 
+    # Cada parâmetro é gerado dentro de uma faixa realista para o contexto da missão.
     solo_analisado = {
         "pH"        : round(random.uniform(3.0, 9.0), 1),
         "umidade"   : round(random.uniform(0, 100), 1),
@@ -120,6 +151,8 @@ def analisar_solo():
 
     for parametro, valor in solo_analisado.items():
 
+        # Faixas de pH: acidez ou alcalinidade extremas são incompatíveis
+        # com o desenvolvimento micelial e indicam solo inviável.
         if parametro == "pH":
             if valor < 4.0 or valor > 8.5:
                 status = "CRÍTICO"
@@ -144,6 +177,7 @@ def analisar_solo():
             else:
                 status = "NORMAL"
 
+        # Toxicidade acima de 3.5 indica contaminantes em nível letal para fungos.
         elif parametro == "toxicidade":
             if valor > 3.5:
                 status = "CRÍTICO"
@@ -175,6 +209,9 @@ def analisar_solo():
     registrar_log(f"Solo analisado: {solo_analisado}")
 
 
+# Carrega a base de espécies fúngicas a partir do arquivo fungos.json.
+# O JSON estrutura cada fungo com parâmetros de compatibilidade ambiental,
+# utilizados pelo sistema de recomendação para o cruzamento com os dados do solo.
 def carregar_fungos_json():
     try:
         with open("fungos.json", "r", encoding="utf-8") as f:
@@ -186,6 +223,9 @@ def carregar_fungos_json():
         print("  [!] Erro ao ler fungos.json. Verifique o formato do arquivo.")
         return []
 
+# Cruza os dados do solo com o banco de espécies para sugerir fungos compatíveis.
+# A recomendação considera fase da simulação, pH, umidade, toxicidade,
+# temperatura e ambiente planetário simultaneamente.
 def recomendar_fungos():
     cabecalho("Recomendar Fungos")
 
@@ -208,6 +248,8 @@ def recomendar_fungos():
 
     print("  Cruzando dados do solo com banco de fungos...\n")
 
+    # A recomendação é sempre orientada à próxima fase a ser executada.
+    # Ao atingir a fase 4 (máxima), o sistema mantém os fungos da fase final.
     fase_alvo = fase_atual + 1 if fase_atual < 4 else 4
 
     if fase_atual == 0:
@@ -219,6 +261,8 @@ def recomendar_fungos():
 
     recomendados = []
 
+    # Cada fungo é avaliado contra seis critérios de compatibilidade.
+    # Somente espécies que satisfazem todos os critérios são incluídas na lista.
     for fungo in fungos:
         compativel_fase        = fungo["fase"]            == fase_alvo
         compativel_ph          = fungo["ph_min"]          <= ph          <= fungo["ph_max"]
@@ -265,6 +309,9 @@ def recomendar_fungos():
     registrar_log(f"Fungos recomendados para {ambiente_atual}: {', '.join(nomes)}")
 
 
+# Executa as fases de regeneração do solo em sequência, uma por chamada.
+# Cada fase é composta por 5 ciclos com eventos aleatórios que impactam
+# a saúde micelial, simulando riscos reais de campo.
 def simular_regeneracao():
     global fase_atual, saude_micelial
     cabecalho("Simular Regeneração")
@@ -273,6 +320,7 @@ def simular_regeneracao():
         print("  [!] Analise o solo antes de simular.")
         return
 
+    # As quatro fases representam etapas progressivas de restauração ecológica.
     fases = [
         "Desintoxicação do solo",
         "Estruturação micelial",
@@ -280,6 +328,7 @@ def simular_regeneracao():
         "Proteção e estabilidade"
     ]
 
+    # Ao concluir todas as fases, o usuário pode reiniciar a simulação do zero.
     if fase_atual == 4:
         print("  Todas as fases já foram concluídas!")
         print(f"  Saúde final da missão: {saude_micelial}%")
@@ -313,20 +362,24 @@ def simular_regeneracao():
     print("  " + "-" * 38)
 
     for ciclo in range(1, 6):
+        # Distribuição de probabilidade dos eventos por ciclo:
+        # 20% contaminação (−10 pts), 20% variação térmica (−5 pts), 60% estável.
         evento = random.randint(1, 10)
 
         if evento <= 2:
-            print(ERRO + f"  Ciclo {ciclo}: ALERTA — Contaminação detectada!")        
+            print(ERRO + f"  Ciclo {ciclo}: ALERTA — Contaminação detectada!")
             saude_micelial -= 10
             registrar_log(f"ALERTA | Fase {proxima} | Ciclo {ciclo} | Contaminação detectada.")
         elif evento <= 4:
-            print(ALERTA + f"  Ciclo {ciclo}: ATENÇÃO — Variação de temperatura.")            
+            print(ALERTA + f"  Ciclo {ciclo}: ATENÇÃO — Variação de temperatura.")
             saude_micelial -= 5
             registrar_log(f"ATENÇÃO | Fase {proxima} | Ciclo {ciclo} | Variação de temperatura.")
         else:
             print(SUCESSO + f"  Ciclo {ciclo}: OK — Rede micelial estável.")
             registrar_log(f"INFO | Fase {proxima} | Ciclo {ciclo} | Estável.")
 
+        # Encerra a fase imediatamente se a saúde atingir zero,
+        # bloqueando o avanço para as fases seguintes.
         if saude_micelial <= 0:
             saude_micelial = 0
             print("\n  [!] Saúde micelial zerada. Simulação encerrada.")
@@ -342,11 +395,15 @@ def simular_regeneracao():
         registrar_log(f"Simulação concluída. Saúde final: {saude_micelial}%")
 
 
+# Coleta e analisa sinais bioelétricos da rede micelial.
+# Os valores simulam leituras de sensores distribuídos pela estrutura fúngica,
+# permitindo diagnosticar a atividade e integridade do micélio em tempo real.
 def monitor_bioeletrico():
     cabecalho("Monitor Bioelétrico")
 
     print("  Gerando leituras biolétricas da rede micelial...\n")
 
+    # 10 leituras independentes representam pontos distintos da rede micelial.
     sinais = [round(random.uniform(0.5, 5.0), 2) for _ in range(10)]
     media  = round(sum(sinais) / len(sinais), 2)
     minimo = min(sinais)
@@ -358,6 +415,8 @@ def monitor_bioeletrico():
 
     print("  Diagnóstico por leitura:\n")
 
+    # Cada leitura é classificada individualmente para identificar pontos críticos
+    # na rede, mesmo quando a média geral se mantém dentro do intervalo normal.
     for i, sinal in enumerate(sinais):
         if sinal < 1.0:
             status = ERRO + "CRÍTICO — Possível morte micelial"
@@ -370,6 +429,8 @@ def monitor_bioeletrico():
 
         print(f"  Leitura {i+1:02d}: {sinal}  →  {status}")
 
+    # O diagnóstico consolidado é baseado na média das leituras,
+    # refletindo o estado predominante da rede como um geral.
     print()
     if media < 1.5:
         print("  Conclusão: Rede micelial em colapso.")
@@ -385,6 +446,8 @@ def monitor_bioeletrico():
 
 
 
+# Exibe o histórico de eventos registrados em missao_log.txt.
+# Suporta filtro por palavra-chave para facilitar a auditoria de ocorrências específicas.
 def consultar_log():
     cabecalho("Consultar Log da Missão")
 
@@ -415,6 +478,9 @@ def consultar_log():
 
 
 
+# Gerencia o banco de espécies cadastradas manualmente pelo usuário.
+# Os fungos são armazenados em fungos.txt, em formato textual simples com campos
+# separados por pipe (|), servindo como registro complementar ao fungos.json.
 def banco_de_fungos():
     cabecalho("Banco de Fungos")
     print("  1. Listar fungos cadastrados")
@@ -443,6 +509,8 @@ def banco_de_fungos():
         local     = input("  Ambiente       : ").strip()
         descricao = input("  Descrição      : ").strip()
 
+        # Cada entrada é gravada em uma linha com campos separados por pipe,
+        # formato suficiente para exibição e auditoria manual do banco.
         try:
             with open("fungos.txt", "a", encoding="utf-8") as f:
                 f.write(f"{nome} | Fase {fase} | {local} | {descricao}\n")
@@ -454,10 +522,13 @@ def banco_de_fungos():
 
 
 
+# Consolida os dados da sessão em um arquivo de relatório com timestamp no nome.
+# O arquivo é salvo localmente e exibido no terminal ao término da geração.
 def gerar_relatorio():
     cabecalho("Gerar Relatório")
 
     agora    = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
+    # O timestamp no nome do arquivo evita sobrescrita entre sessões distintas.
     nome_arq = f"relatorio_{datetime.datetime.now().strftime('%d%m%Y_%H%M')}.txt"
 
     linhas = []
@@ -480,6 +551,7 @@ def gerar_relatorio():
 
     linhas.append("=" * 45)
 
+    # Classificação final baseada na saúde micelial acumulada ao longo da simulação.
     if saude_micelial >= 75:
         linhas.append("  Status geral: MISSÃO BEM-SUCEDIDA")
     elif saude_micelial >= 40:
@@ -502,6 +574,8 @@ def gerar_relatorio():
 
 
 
+# Loop principal do sistema. Exibe o menu de navegação e despacha cada
+# opção para sua respectiva função até que o usuário escolha sair.
 def menu():
     while True:
         print(SUCESSO + "  1. Selecionar ambiente")
@@ -536,7 +610,7 @@ def menu():
         print(INFO + "     Salva um resumo completo da missão.")
         print()
 
-        print(ERRO + "  0. Sair")   
+        print(ERRO + "  0. Sair")
 
         op = ler_opcao(8)
 
