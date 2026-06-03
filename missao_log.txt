@@ -37,3 +37,29 @@
 [02/06/2026 19:23] Solo analisado: {'pH': 6.6, 'umidade': 55.2, 'nitrogenio': 50.8, 'toxicidade': 3.04, 'temperatura': 25.5}
 [02/06/2026 19:24] Relatório gerado: relatorio_02062026_1924.txt
 [02/06/2026 20:04] Ambiente selecionado: Terra
+[02/06/2026 21:21] Ambiente selecionado: Terra
+[02/06/2026 21:22] Ambiente selecionado: Terra
+[02/06/2026 21:26] Ambiente selecionado: Terra
+[02/06/2026 21:26] Solo analisado: {'pH': 8.0, 'umidade': 27.7, 'nitrogenio': 99.2, 'toxicidade': 1.32, 'temperatura': 17.6}
+[02/06/2026 21:26] Fungos recomendados para Terra: Trichoderma spp.
+[02/06/2026 21:27] INFO | Fase 1 | Ciclo 1 | Estável.
+[02/06/2026 21:27] INFO | Fase 1 | Ciclo 2 | Estável.
+[02/06/2026 21:27] ALERTA | Fase 1 | Ciclo 3 | Contaminação detectada.
+[02/06/2026 21:27] INFO | Fase 1 | Ciclo 4 | Estável.
+[02/06/2026 21:27] ATENÇÃO | Fase 1 | Ciclo 5 | Variação de temperatura.
+[02/06/2026 21:27] Fase 1 concluída. Saúde: 85%
+[02/06/2026 21:27] Monitor bioelétrico — média: 3.29, min: 0.86, max: 4.94
+[02/06/2026 21:28] Fungo cadastrado: Fungo Teste 1
+[02/06/2026 21:29] Relatório gerado: relatorio_02062026_2129.txt
+[02/06/2026 21:30] Relatório gerado: relatorio_02062026_2130.txt
+[02/06/2026 21:33] Relatório gerado: relatorio_02062026_2133.txt
+[02/06/2026 21:33] Ambiente selecionado: Lua
+[02/06/2026 21:33] Solo analisado: {'pH': 8.9, 'umidade': 59.2, 'nitrogenio': 46.1, 'toxicidade': 4.32, 'temperatura': -16.7}
+[02/06/2026 21:33] Recomendação: nenhum fungo compatível encontrado.
+[02/06/2026 21:33] Recomendação: nenhum fungo compatível encontrado.
+[02/06/2026 21:33] INFO | Fase 1 | Ciclo 1 | Estável.
+[02/06/2026 21:33] ALERTA | Fase 1 | Ciclo 2 | Contaminação detectada.
+[02/06/2026 21:33] INFO | Fase 1 | Ciclo 3 | Estável.
+[02/06/2026 21:33] ALERTA | Fase 1 | Ciclo 4 | Contaminação detectada.
+[02/06/2026 21:33] INFO | Fase 1 | Ciclo 5 | Estável.
+[02/06/2026 21:33] Fase 1 concluída. Saúde: 80%

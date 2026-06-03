@@ -115,14 +115,7 @@ def analisar_solo():
         "temperatura": round(random.uniform(-60, 40), 1)
     }
 
-    if status == "CRÍTICO":
-        cor = ERRO
-    elif status == "ATENÇÃO":
-        cor = ALERTA
-    else:
-        cor = SUCESSO
-
-    print(f"  {parametro:<14} {str(valor):<10} {cor}{status}")
+    print(f"  {'Parâmetro':<14} {'Valor':<10} {'Status'}")
     print("  " + "-" * 38)
 
     for parametro, valor in solo_analisado.items():
@@ -170,7 +163,14 @@ def analisar_solo():
         else:
             status = "DESCONHECIDO"
 
-        print(f"  {parametro:<14} {str(valor):<10} {status}")
+        if status == "CRÍTICO":
+            cor = ERRO
+        elif status == "ATENÇÃO":
+            cor = ALERTA
+        else:
+            cor = SUCESSO
+
+        print(f"  {parametro:<14} {str(valor):<10} {cor}{status}")
 
     registrar_log(f"Solo analisado: {solo_analisado}")
 
@@ -428,12 +428,14 @@ def banco_de_fungos():
             with open("fungos.txt", "r", encoding="utf-8") as f:
                 linhas = f.readlines()
             if not linhas:
-                print("  Banco vazio.")
+                print(ALERTA + "  [!] Nenhum fungo cadastrado no banco.")
+                print(INFO + "  Use a opção 2 para cadastrar um novo fungo.")
             else:
                 for linha in linhas:
                     print(" ", linha.strip())
         except FileNotFoundError:
-            print("  [!] Arquivo de fungos não encontrado.")
+            print(ALERTA + "  [!] Nenhum fungo cadastrado no banco.")
+            print(INFO + "  Use a opção 2 para cadastrar um novo fungo.")
 
     elif op == 2:
         nome      = input("  Nome do fungo  : ").strip()
