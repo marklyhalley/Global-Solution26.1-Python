@@ -63,3 +63,17 @@
 [02/06/2026 21:33] ALERTA | Fase 1 | Ciclo 4 | Contaminação detectada.
 [02/06/2026 21:33] INFO | Fase 1 | Ciclo 5 | Estável.
 [02/06/2026 21:33] Fase 1 concluída. Saúde: 80%
+[05/06/2026 15:24] Ambiente selecionado: Terra
+[05/06/2026 15:32] Ambiente selecionado: Terra
+[05/06/2026 15:32] Solo analisado: {'pH': 3.6, 'umidade': 96.8, 'nitrogenio': 41.1, 'toxicidade': 3.34, 'temperatura': 24.4}
+[05/06/2026 15:32] Ambiente selecionado: Terra
+[05/06/2026 15:32] Solo analisado: {'pH': 3.2, 'umidade': 7.8, 'nitrogenio': 75.1, 'toxicidade': 3.03, 'temperatura': -21.5}
+[05/06/2026 15:32] Recomendação: nenhum fungo compatível encontrado.
+[05/06/2026 15:33] ATENÇÃO | Fase 1 | Ciclo 1 | Variação de temperatura.
+[05/06/2026 15:33] INFO | Fase 1 | Ciclo 2 | Estável.
+[05/06/2026 15:33] INFO | Fase 1 | Ciclo 3 | Estável.
+[05/06/2026 15:33] INFO | Fase 1 | Ciclo 4 | Estável.
+[05/06/2026 15:33] INFO | Fase 1 | Ciclo 5 | Estável.
+[05/06/2026 15:33] Fase 1 concluída. Saúde: 95%
+[05/06/2026 15:33] Monitor bioelétrico — média: 2.4, min: 0.51, max: 4.06
+[05/06/2026 15:34] Relatório gerado: relatorio_05062026_1534.txt

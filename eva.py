@@ -1,4 +1,4 @@
-# MycoSentinel — Sistema de monitoramento e simulação de redes miceliais
+# E.V.A. — Sistema de monitoramento e simulação de redes miceliais
 # para ambientes extremos (Terra, Lua e Marte). Coordena análise de solo,
 # recomendação de fungos, simulação de regeneração e geração de relatórios.
 
@@ -45,7 +45,7 @@ def cabecalho(titulo):
     limpar_tela()
 
     print(TITULO + "=" * 55)
-    print(TITULO + f"  MycoSentinel — {titulo}")
+    print(TITULO + f"  E.V.A. — {titulo}")
     print(TITULO + "=" * 55)
 
     print(INFO + f"  Ambiente: {ambiente_atual or 'Não selecionado'}")
@@ -533,7 +533,7 @@ def gerar_relatorio():
 
     linhas = []
     linhas.append("=" * 45)
-    linhas.append("  RELATÓRIO DE MISSÃO — MycoSentinel")
+    linhas.append("  RELATÓRIO DE MISSÃO — E.V.A.")
     linhas.append("=" * 45)
     linhas.append(f"  Data       : {agora}")
     linhas.append(f"  Ambiente   : {ambiente_atual or 'Não definido'}")
@@ -623,7 +623,7 @@ def menu():
         elif op == 7: banco_de_fungos()
         elif op == 8: gerar_relatorio()
         elif op == 0:
-            print("\n  Encerrando MycoSentinel...\n")
+            print("\n  Encerrando E.V.A....\n")
             break
 
         pausar()
