@@ -321,12 +321,13 @@ def simular_regeneracao():
         return
 
     # As quatro fases representam etapas progressivas de restauração ecológica.
-    fases = [
+    # Tupla usada pois a sequência de fases é fixa e não deve ser modificada.
+    fases = (
         "Desintoxicação do solo",
         "Estruturação micelial",
         "Nutrição e regeneração",
         "Proteção e estabilidade"
-    ]
+    )
 
     # Ao concluir todas as fases, o usuário pode reiniciar a simulação do zero.
     if fase_atual == 4:

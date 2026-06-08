@@ -77,3 +77,15 @@
 [05/06/2026 15:33] Fase 1 concluída. Saúde: 95%
 [05/06/2026 15:33] Monitor bioelétrico — média: 2.4, min: 0.51, max: 4.06
 [05/06/2026 15:34] Relatório gerado: relatorio_05062026_1534.txt
+[08/06/2026 19:18] Ambiente selecionado: Terra
+[08/06/2026 19:18] Solo analisado: {'pH': 5.3, 'umidade': 3.8, 'nitrogenio': 55.7, 'toxicidade': 1.63, 'temperatura': -33.0}
+[08/06/2026 19:18] Recomendação: nenhum fungo compatível encontrado.
+[08/06/2026 19:19] INFO | Fase 1 | Ciclo 1 | Estável.
+[08/06/2026 19:19] INFO | Fase 1 | Ciclo 2 | Estável.
+[08/06/2026 19:19] INFO | Fase 1 | Ciclo 3 | Estável.
+[08/06/2026 19:19] INFO | Fase 1 | Ciclo 4 | Estável.
+[08/06/2026 19:19] INFO | Fase 1 | Ciclo 5 | Estável.
+[08/06/2026 19:19] Fase 1 concluída. Saúde: 100%
+[08/06/2026 19:19] Monitor bioelétrico — média: 3.16, min: 1.21, max: 4.46
+[08/06/2026 19:20] Fungo cadastrado: fungo ex
+[08/06/2026 19:20] Relatório gerado: relatorio_08062026_1920.txt
